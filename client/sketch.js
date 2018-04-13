@@ -10,10 +10,23 @@ var eyeLeft = 0;
 var eyeRight = 0;
 var jaw = 0;
 var nostrils = 0;
+var imgArray = new Array();
+var on = false;
 
 function setup() {
-  	createCanvas(500, 400);
+	var cnv = createCanvas(600, 450);
+	var x = (windowWidth-width) / 2;
+	cnv.position(x,0);
+	background(0);
 	setupOsc(8338, 3334);
+	imgArray[0] = loadImage("assets/owl1.jpg");
+	imgArray[1] = loadImage("assets/owl2.jpg");
+	imgArray[2] = loadImage("assets/owl3.jpg");
+	imgArray[3] = loadImage("assets/owl4.jpg");
+	imgArray[4] = loadImage("assets/owl5.jpg");
+	imgArray[5] = loadImage("assets/owl6.jpg");
+	imgArray[6] = loadImage("assets/owl7.jpg");
+	imgArray[7] = loadImage("assets/owl8.jpg");
 }
 
 function draw() {
@@ -41,16 +54,40 @@ function draw() {
 			endShape();
 		}	
 	}
+
+	var scalez = map(scale, 2, 8, 0.2, 1.8)
+
 	rectMode(CENTER)
-	ellipse(position.x + 50, position.y - 50, 10*mouthHeight, 10*mouthHeight)
-	ellipse(position.x - 50, position.y - 50, 10*mouthHeight, 10*mouthHeight)
-	triangle(position.x - 10, position.y -10, position.x + 10, position.y -10, position.x, position.y + 15)
+	ellipse(position.x + 50*scalez, position.y - 50*scalez, 10*mouthHeight*scalez*scalez, 10*mouthHeight*scalez*scalez)
+	ellipse(position.x - 50*scalez, position.y - 50*scalez, 10*mouthHeight*scalez*scalez, 10*mouthHeight*scalez*scalez)
+	triangle(position.x - 10*scalez, position.y - 10*scalez, position.x + 10*scalez, position.y -10*scalez, position.x, position.y + 15*scalez)
 	
-	rect(position.x, position.y + 80, 10*mouthHeight, 10*mouthHeight)
-	var text1 = toString(scale);
+	rect(position.x, position.y + 80*scalez, 10*mouthHeight*scalez*scalez, 10*mouthHeight*scalez*scalez)
+
+	var text1 =  mouthHeight;
 	textAlign(CENTER);
-	fill(0,0,0)
-	text(text1, width/2, height/2);
+	fill(color(255,255,255))
+	//text(text1, 200, height-10);
+
+	if (10*mouthHeight*scalez*scalez > 220){
+		if (!on){
+			i = Math.floor(random(0,8));
+			img = imgArray[i];
+			imageMode(CORNER);
+			image(img, 0, 0, 600, 450);
+			on = true;
+		}
+		imageMode(CORNER);
+		image(img, 0, 0, 600, 450);
+	}
+	else if  (mouthHeight > 4){
+		text("careful...", 30, height-10);
+		on = false;
+	} else {
+		on = false;
+	}
+	
+	
 }
 
 function receiveOsc(address, value) {
